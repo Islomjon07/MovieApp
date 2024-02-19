@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name"> Movie 🎞 </string>
+    <string name="what_do_you">What do you want to watch?</string>
+    <string name="splashScreen">SplashScreen</string>
+    <string name="mainScreen">MainScreen</string>
+    <string name="watchListScreen">WatchListScreen</string>
+    <string name="searchScreen">SearchScreen</string>
+    <string name="no_internet">Нет подключение к интернету</string>
+    <string name="povtor">Повторить</string>
+    <string name="povt">Повторить</string>
+    <string name="seti">Ожидание сети ...</string>
+    <string name="mainscreen">MainScreen</string>
+    <string name="searchscreen">SearchScreen</string>
+    <string name="watchlistscreen">WatchListScreen</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="watch_list">Watch list</string>
+</resources>
