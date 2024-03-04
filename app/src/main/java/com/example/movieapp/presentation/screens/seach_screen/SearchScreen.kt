@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.R
 import com.example.movieapp.data.cloud.utils.Constants.POSTER_PATH_URL
+import com.example.movieapp.presentation.component.LoadingScreen
 import com.example.movieapp.presentation.component.NoConnectionScreen
 import com.example.movieapp.presentation.models.movie_list.MovieUi
 import com.example.movieapp.presentation.screens.seach_screen.component.SearchScreenItem
@@ -121,7 +122,7 @@ fun SearchScreen(
     ) {
         when (val searchUiFlow = uiStateFlow.collectAsState().value) {
             is SearchUiState.Error -> NoConnectionScreen(callbackError = {})
-            SearchUiState.Loading -> Unit
+            SearchUiState.Loading -> LoadingScreen()
             is SearchUiState.Success -> {
                 SearchLazyColumnScreen(
                     movieList = searchUiFlow.searchUiState,
