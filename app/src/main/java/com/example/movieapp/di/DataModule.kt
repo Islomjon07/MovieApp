@@ -34,6 +34,7 @@ class DataModule {
                     ).build()
             ).build()
     }
+
     @Provides
     fun provideWeatherService(
         retrofit: Retrofit

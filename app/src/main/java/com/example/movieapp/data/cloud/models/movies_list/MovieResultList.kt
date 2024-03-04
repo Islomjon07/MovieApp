@@ -1,4 +1,4 @@
-package com.example.movieapp.data.cloud.models
+package com.example.movieapp.data.cloud.models.movies_list
 
 import com.example.movieapp.data.cloud.utils.Constants.EMPTY_STRING
 import com.google.gson.annotations.SerializedName
@@ -7,7 +7,7 @@ import java.io.Serializable
 
 data class MovieResultList(
     @SerializedName("backdrop_path")
-    val movieBackdropPath: String,
+    val movieBackdropPath: String?,
     @SerializedName("genre_ids")
     val movieGenreIds: List<Int>,
     @SerializedName("id")
@@ -25,7 +25,7 @@ data class MovieResultList(
     @SerializedName("release_date")
     val movieReleaseDate: String,
     @SerializedName("title")
-    val movieTitle: String,
+    val movieTitle: String?,
     @SerializedName("vote_average")
     val movieVoteAverage: Double,
     @SerializedName("vote_count")

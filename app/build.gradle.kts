@@ -86,7 +86,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
 
     //AsyncImage
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -107,6 +107,9 @@ dependencies {
 
     // Location Services
     implementation("com.google.android.gms:play-services-location:21.1.0")
+
+    //ConstrainLayout
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     // Lottie animation
     implementation("com.airbnb.android:lottie-compose:6.3.0")

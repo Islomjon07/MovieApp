@@ -3,7 +3,6 @@ package com.example.movieapp.presentation.nav_graf
 import com.example.movieapp.R
 
 sealed class Screens(val route: String) {
-    data object SplashScreen : Screens("SplashScreen")
     data object BottomNavigation : Screens("BottomNavigation")
 }
 

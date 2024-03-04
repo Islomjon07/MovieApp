@@ -9,9 +9,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.movieapp.presentation.component.BottomNavGraphUI
+import com.example.movieapp.presentation.screens.datails_screen.component.DetailsDestination
+import com.example.movieapp.presentation.screens.datails_screen.DetailsScreen
+import com.example.movieapp.presentation.screens.datails_screen.DetailsViewModel
 import com.example.movieapp.presentation.screens.main_screen.MainScreen
 import com.example.movieapp.presentation.screens.main_screen.MainScreenViewModel
+import com.example.movieapp.presentation.screens.main_screen.component.MainScreenDestination
+import com.example.movieapp.presentation.screens.seach_screen.component.SearchDestination
 import com.example.movieapp.presentation.screens.seach_screen.SearchScreen
+import com.example.movieapp.presentation.screens.seach_screen.SearchViewModel
+import com.example.movieapp.presentation.screens.watch_list_screen.component.WatchListDestination
 import com.example.movieapp.presentation.screens.watch_list_screen.WatchListScreen
 
 @Composable
@@ -19,29 +26,48 @@ fun BottomNavGraph(
     navHostController: NavHostController,
     callBackPopBackSplash: () -> Unit,
 ) {
-    val mainScreenRoute = BottomScreens.MainScreen.route
-    val searchScreenRoute = BottomScreens.SearchScreen.route
-    val watchListScreen = BottomScreens.WatchListScreen.route
-
-    val viewModel: MainScreenViewModel = hiltViewModel()
-
     NavHost(
         navController = navHostController,
-        startDestination = mainScreenRoute,
+        startDestination = MainScreenDestination.route,
     ) {
-
-        composable(mainScreenRoute) {
+        composable(MainScreenDestination.route) {
+            val viewModel: MainScreenViewModel = hiltViewModel()
             MainScreen(
                 uiStateFlow = viewModel.uiState,
                 viewModel = viewModel,
-                callBackPopBackSplash = callBackPopBackSplash
+                callBackPopBackSplash = callBackPopBackSplash,
+                onNavigateToInfo = { movieId ->
+                    navHostController.navigate("${DetailsDestination.route}/$movieId")
+                },
+                onNavigateToSearch = { navHostController.navigate(SearchDestination.route) }
             )
         }
-        composable(searchScreenRoute) {
-            SearchScreen()
+        composable(SearchDestination.route) {
+            val searchViewModel: SearchViewModel = hiltViewModel()
+            SearchScreen(
+                uiStateFlow = searchViewModel.uiState,
+                onValueChange = searchViewModel::startSearch,
+                viewModel = searchViewModel,
+                navigateToDetails = { searchId ->
+                    navHostController.navigate("${DetailsDestination.route}/$searchId")
+                },
+                callBackPopBackState = { navHostController.popBackStack() }
+            )
         }
-        composable(watchListScreen) {
+        composable(WatchListDestination.route) {
             WatchListScreen()
+        }
+        composable(
+            route = DetailsDestination.routeWithArgs,
+            arguments = DetailsDestination.arguments,
+        ) { navBackStackEntry ->
+            val movieId = navBackStackEntry.arguments?.getInt(DetailsDestination.movieId) ?: 0
+            val viewModel: DetailsViewModel = hiltViewModel()
+            DetailsScreen(
+                onGetMovieInfo = { viewModel.getDetailsMovie(movieId) },
+                uiStateFlow = viewModel.uiState,
+                callBackPopBackDetail = { navHostController.popBackStack() }
+            )
         }
     }
 }
@@ -49,15 +75,17 @@ fun BottomNavGraph(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreenBottomNavGraph(
-    callBackPopBackSplash: () -> Unit
+    callBackPopBackSplash: () -> Unit,
 ) {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomNavGraphUI(navController = navController) }
+        bottomBar = {
+            BottomNavGraphUI(navController = navController)
+        }
     ) {
         BottomNavGraph(
             navHostController = navController,
-            callBackPopBackSplash = callBackPopBackSplash
+            callBackPopBackSplash = callBackPopBackSplash,
         )
     }
 }

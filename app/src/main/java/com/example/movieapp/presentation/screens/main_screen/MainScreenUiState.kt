@@ -1,6 +1,6 @@
 package com.example.movieapp.presentation.screens.main_screen
 
-import com.example.movieapp.presentation.models.MovieUi
+import com.example.movieapp.presentation.models.movie_list.MovieUi
 import javax.annotation.concurrent.Immutable
 import kotlinx.collections.immutable.ImmutableList
 @Immutable

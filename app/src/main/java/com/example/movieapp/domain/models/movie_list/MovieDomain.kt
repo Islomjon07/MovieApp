@@ -1,10 +1,10 @@
-package com.example.movieapp.domain.models
+package com.example.movieapp.domain.models.movie_list
 
 import com.example.movieapp.data.cloud.utils.Constants
 import java.io.Serializable
 
 data class MovieDomain(
-    val movieBackdropPath: String,
+    val movieBackdropPath: String?,
     val movieGenreIds: List<Int>,
     val movieId: Int,
     val movieOriginalLanguage: String,
@@ -13,7 +13,7 @@ data class MovieDomain(
     val moviePopularity: Double,
     val moviePosterPath: String,
     val movieReleaseDate: String,
-    val movieTitle: String,
+    val movieTitle: String?,
     val movieVoteAverage: Double,
     val movieVoteCount: Int,
 ) : Serializable {

@@ -4,7 +4,8 @@ import com.example.movieapp.data.cloud.base.BaseDataSource
 import com.example.movieapp.data.cloud.base.model.ResultStatus
 import com.example.movieapp.data.cloud.mappers.toDataModel
 import com.example.movieapp.data.cloud.remote.MovieService
-import com.example.movieapp.domain.models.MovieDomain
+import com.example.movieapp.domain.models.details.DetailsDomainModel
+import com.example.movieapp.domain.models.movie_list.MovieDomain
 import com.example.movieapp.domain.repository.GetCurrentMovieRepository
 
 
@@ -47,5 +48,25 @@ class DefaultGetCurrentMovieRepository(
         return ResultStatus(status = response.status,
             errorThrowable = response.errorThrowable,
             data = response.data?.movies?.map { it.toDataModel() })
+    }
+
+    override suspend fun fetchSearchMovie(textQuery: String): ResultStatus<List<MovieDomain>> {
+        val response = invokeResponseRequest {
+            service.searchByQuery(textQuery)
+        }
+        return ResultStatus(status = response.status,
+            errorThrowable = response.errorThrowable,
+            data = response.data?.movies?.map { it.toDataModel() })
+    }
+
+    override suspend fun fetchMovieByIdInfo(movieId: Int): ResultStatus<DetailsDomainModel> {
+        val response = invokeResponseRequest {
+            service.fetchMovieByIdInfo(movieId = movieId)
+        }
+        return ResultStatus(
+            status = response.status,
+            errorThrowable = response.errorThrowable,
+            data = response.data?.toDataModel()
+        )
     }
 }

@@ -9,8 +9,10 @@ object Constants {
     const val GET_MOVIE_NOW_PLAYING_MOVIE = "movie/now_playing"
     const val GET_MOVIE_UPCOMING_MOVIE = "movie/upcoming"
     const val GET_MOVIE_DETAILS_ID = "movie/{movie_id}"
-    const val API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NTIzMDM1YzBhMTg4MjRiYzBjMzQ1MjE0MGIzODkzOCIsInN1YiI6IjY1YjRkNDcwNjBjNTFkMDBjOWQwMThjOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0wIQeM75WxbbNJ8do6HK0ToqO1TwU6p-f8yG9apWaes"
+    const val GET_MOVIE_SEARCH_ID = "search/movie"
+    const val GET_MOVIE_REVIEWS_ID = "movie/{movie_id}/reviews"
+    const val API_KEY =
+        "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NTIzMDM1YzBhMTg4MjRiYzBjMzQ1MjE0MGIzODkzOCIsInN1YiI6IjY1YjRkNDcwNjBjNTFkMDBjOWQwMThjOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0wIQeM75WxbbNJ8do6HK0ToqO1TwU6p-f8yG9apWaes"
     const val EMPTY_STRING = ""
 
 }
-

@@ -1,10 +1,14 @@
 package com.example.movieapp.di
 
 import com.example.movieapp.domain.repository.GetCurrentMovieRepository
+import com.example.movieapp.domain.use_cases.details.DefaultDetailsMovieUseCase
+import com.example.movieapp.domain.use_cases.details.DetailsMovieUseCase
 import com.example.movieapp.domain.use_cases.now_playing.DefaultNowPlayingMovieUseCase
 import com.example.movieapp.domain.use_cases.now_playing.GetNowPlayingMovieUseCase
 import com.example.movieapp.domain.use_cases.popular.DefaultGetPopularMovieUseCase
 import com.example.movieapp.domain.use_cases.popular.GetPopularMovieUseCase
+import com.example.movieapp.domain.use_cases.search.DefaultSearchMovieUseCase
+import com.example.movieapp.domain.use_cases.search.SearchMovieUseCase
 import com.example.movieapp.domain.use_cases.top_rated.DefaultGetTopRatedMovieUseCase
 import com.example.movieapp.domain.use_cases.top_rated.GetTopRatedMovieUseCase
 import com.example.movieapp.domain.use_cases.upcoming.DefaultGetUpcomingMovieUseCase
@@ -45,4 +49,19 @@ class DomainModule {
     ): GetUpcomingMovieUseCase = DefaultGetUpcomingMovieUseCase(
         repository = repository
     )
+
+    @Provides
+    fun provideDetailsUseCase(
+        repository: GetCurrentMovieRepository
+    ): DetailsMovieUseCase = DefaultDetailsMovieUseCase(
+        repository = repository
+    )
+
+    @Provides
+    fun provideSearchUseCase(
+        repository: GetCurrentMovieRepository
+    ): SearchMovieUseCase = DefaultSearchMovieUseCase(
+        repository = repository
+    )
 }
+

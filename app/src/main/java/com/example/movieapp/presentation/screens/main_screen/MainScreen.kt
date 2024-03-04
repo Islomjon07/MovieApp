@@ -1,13 +1,13 @@
 package com.example.movieapp.presentation.screens.main_screen
 
-import androidx.activity.addCallback
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,35 +23,31 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.movieapp.R
-import com.example.movieapp.data.cloud.utils.Constants.EMPTY_STRING
-import com.example.movieapp.presentation.component.LoadedScreen
+import com.example.movieapp.presentation.component.LoadingScreen
 import com.example.movieapp.presentation.component.NoConnectionScreen
 import com.example.movieapp.presentation.component.SetSystemBarsColor
+import com.example.movieapp.presentation.screens.main_screen.component.DeletePopBackSplash
 import com.example.movieapp.presentation.screens.main_screen.component.MainScreenItemTwo
 import com.example.movieapp.presentation.screens.main_screen.component.MoviesLazyColumn
 import com.example.movieapp.presentation.theme.Greeys
@@ -62,7 +58,11 @@ import com.example.movieapp.presentation.theme.dp15
 import com.example.movieapp.presentation.theme.dp18
 import com.example.movieapp.presentation.theme.dp20
 import com.example.movieapp.presentation.theme.dp42
+import com.example.movieapp.presentation.theme.dp6
+import com.example.movieapp.presentation.theme.dp60
+import com.example.movieapp.presentation.theme.dp8
 import com.example.movieapp.presentation.theme.sp18
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -70,45 +70,46 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     uiStateFlow: StateFlow<MainScreenUiState>,
     viewModel: MainScreenViewModel,
-    callBackPopBackSplash: () -> Unit
+    callBackPopBackSplash: () -> Unit,
+    onNavigateToInfo: (Int) -> Unit,
+    onNavigateToSearch: () -> Unit
 ) {
 
-    val backstackDispatcher = LocalOnBackPressedDispatcherOwner.current
-
-    backstackDispatcher?.onBackPressedDispatcher?.addCallback {
-        callBackPopBackSplash()
-    }
     when (val mainScreenUiFlow = uiStateFlow.collectAsState().value) {
-        is MainScreenUiState.Loading -> LoadedScreen()
+        is MainScreenUiState.Loading -> LoadingScreen()
         is MainScreenUiState.Success -> {
-            LoadedScreen(uiState = mainScreenUiFlow)
+            LoadedScreen(
+                uiState = mainScreenUiFlow,
+                onNavigateToInfo = onNavigateToInfo,
+                onNavigateToSearch = onNavigateToSearch
+            )
         }
 
         is MainScreenUiState.Error -> NoConnectionScreen(
-            callbackErrorTopRated = viewModel::fetchTopRatedMovie
+            callbackError = viewModel::fetchTopRatedMovie
         )
     }
     SetSystemBarsColor(
         setSystemBarsColor = MaterialTheme.colorScheme.background,
         setNavigationBarColor = MaterialTheme.colorScheme.background,
     )
+    DeletePopBackSplash(callBackPopBackSplash = callBackPopBackSplash)
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoadedScreen(
     modifier: Modifier = Modifier,
     uiState: MainScreenUiState.Success,
+    onNavigateToInfo: (Int) -> Unit,
+    onNavigateToSearch: () -> Unit
 ) {
     val movieList = listOf(
+        uiState.movieNowPlaying,
+        uiState.movieUpcoming,
         uiState.movieTopRated,
         uiState.moviePopular,
-        uiState.movieNowPlaying,
-        uiState.movieUpcoming
     )
-    var cleanTitleState1 by remember {
-        mutableStateOf(EMPTY_STRING)
-    }
     val pagerState = rememberPagerState { movieList.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -130,38 +131,43 @@ fun LoadedScreen(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            OutlinedTextField(
+            Card(
                 modifier = modifier
                     .padding(top = dp20)
                     .height(dp42)
                     .fillMaxWidth()
+                    .clickable {
+                        onNavigateToSearch()
+                    }
                     .clip(shape = RoundedCornerShape(size = 16.dp))
                     .background(color = Greeys),
-                value = cleanTitleState1,
-                onValueChange = { cleanTitleState1 = it },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = null,
-                        tint = Color.Gray,
-                    )
-                },
-                placeholder = {
+            ) {
+                Row(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(dp8),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
+                        modifier = modifier.padding(top = dp6),
                         text = "Search",
                         color = GreeysWH,
                         fontWeight = FontWeight.Normal,
                         fontSize = 10.sp,
                     )
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                ),
-            )
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = null,
+                        tint = Color.Gray,
+                    )
+                }
+            }
+
             Spacer(modifier = modifier.padding(top = dp18))
-            MoviesLazyColumn(uiState.movieTopRated)
+            MoviesLazyColumn(
+                uiState.moviePopular,
+                onNavigateToInfo = onNavigateToInfo
+            )
             Column(
                 modifier = modifier.height(screenHeight)
             ) {
@@ -207,8 +213,8 @@ fun LoadedScreen(
                     userScrollEnabled = true
                 ) { page ->
                     val movie = movieList[page]
-
                     LazyVerticalGrid(
+                        modifier = modifier.padding(bottom = dp60),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         columns = GridCells.Fixed(3),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -217,6 +223,8 @@ fun LoadedScreen(
                             MainScreenItemTwo(
                                 imageUrl = it.moviePosterPath,
                                 image = painterResource(id = R.drawable.movie_svgrepo_com),
+                                movieID = it.movieId,
+                                onNavigateToInfo = onNavigateToInfo
                             )
                         }
                     }
@@ -234,3 +242,13 @@ fun getPagerHeaderByPosition(position: Int): String = when (position) {
     else -> "Popular"
 }
 
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    MainScreen(
+        uiStateFlow = MutableStateFlow<MainScreenUiState>(value = MainScreenUiState.Loading),
+        viewModel = hiltViewModel(),
+        callBackPopBackSplash = {},
+        onNavigateToInfo = {}
+    ) {}
+}

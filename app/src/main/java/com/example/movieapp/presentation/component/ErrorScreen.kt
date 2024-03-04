@@ -26,7 +26,7 @@ import com.example.movieapp.presentation.theme.dp8
 
 @Composable
 fun NoConnectionScreen(
-    callbackErrorTopRated: () -> Unit,
+    callbackError: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -49,7 +49,7 @@ fun NoConnectionScreen(
             )
             Button(
                 onClick = {
-                    callbackErrorTopRated()
+                    callbackError()
                 },
                 colors = ButtonDefaults.buttonColors(TaskerBlue),
                 modifier = Modifier
@@ -70,6 +70,6 @@ fun NoConnectionScreen(
 @Preview
 @Composable
 fun Previews() {
-    NoConnectionScreen(callbackErrorTopRated = {})
+    NoConnectionScreen(callbackError = {})
 }
 

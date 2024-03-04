@@ -1,7 +1,7 @@
 package com.example.movieapp.domain.use_cases.top_rated
 
 import com.example.movieapp.data.cloud.base.model.ResultStatus
-import com.example.movieapp.domain.models.MovieDomain
+import com.example.movieapp.domain.models.movie_list.MovieDomain
 import com.example.movieapp.domain.repository.GetCurrentMovieRepository
 import javax.inject.Inject
 

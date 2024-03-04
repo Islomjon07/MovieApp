@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.models
+package com.example.movieapp.presentation.models.movie_list
 
 import androidx.compose.runtime.Stable
 import com.example.movieapp.data.cloud.utils.Constants.EMPTY_STRING
