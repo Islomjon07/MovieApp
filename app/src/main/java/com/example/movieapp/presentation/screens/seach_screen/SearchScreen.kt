@@ -30,10 +30,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.R
 import com.example.movieapp.data.cloud.utils.Constants.POSTER_PATH_URL
+import com.example.movieapp.presentation.component.LoadingScreen
 import com.example.movieapp.presentation.component.NoConnectionScreen
 import com.example.movieapp.presentation.models.movie_list.MovieUi
 import com.example.movieapp.presentation.screens.seach_screen.component.SearchScreenItem
@@ -43,6 +45,7 @@ import com.example.movieapp.presentation.theme.dp15
 import com.example.movieapp.presentation.theme.dp25
 import com.example.movieapp.presentation.theme.dp60
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.StateFlow
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -120,16 +123,15 @@ fun SearchScreen(
         },
     ) {
         when (val searchUiFlow = uiStateFlow.collectAsState().value) {
+            SearchUiState.Initial -> LoadingScreen()
             is SearchUiState.Error -> NoConnectionScreen(callbackError = {})
-            SearchUiState.Loading -> Unit
+            is SearchUiState.Loading -> LoadingScreen()
             is SearchUiState.Success -> {
                 SearchLazyColumnScreen(
                     movieList = searchUiFlow.searchUiState,
                     navigateToDetails = navigateToDetails
                 )
             }
-
-            SearchUiState.Initial -> Unit
         }
     }
 }
@@ -148,7 +150,10 @@ private fun SearchLazyColumnScreen(
             modifier = Modifier
                 .padding(bottom = dp60)
         ) {
-            items(items = movieList, key = { it.movieId }) {
+            items(
+                items = movieList,
+                key = { it.movieId }
+            ) {
                 SearchScreenItem(
                     navigateToDetails = navigateToDetails,
                     posterUrl = POSTER_PATH_URL + it.moviePosterPath,
@@ -162,5 +167,11 @@ private fun SearchLazyColumnScreen(
         }
     }
 }
+@Preview
+@Composable
+fun SearchImagePr() {
+    SearchLazyColumnScreen(movieList = persistentListOf()){
 
+    }
+}
 

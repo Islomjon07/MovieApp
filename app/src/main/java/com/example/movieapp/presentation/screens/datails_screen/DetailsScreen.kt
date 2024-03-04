@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.movieapp.R
 import com.example.movieapp.data.cloud.utils.Constants.POSTER_PATH_URL
+import com.example.movieapp.domain.models.details.DetailsDomainModel
 import com.example.movieapp.presentation.component.LoadingScreen
 import com.example.movieapp.presentation.models.details.DetailsUiModel
 import com.example.movieapp.presentation.screens.datails_screen.component.DetailsTabRow
@@ -47,7 +49,6 @@ import com.example.movieapp.presentation.theme.dp28
 import com.example.movieapp.presentation.theme.dp3
 import com.example.movieapp.presentation.theme.dp30
 import com.example.movieapp.presentation.theme.dp4
-import com.example.movieapp.presentation.theme.dp50
 import com.example.movieapp.presentation.theme.dp54
 import com.example.movieapp.presentation.theme.dp70
 import com.example.movieapp.presentation.theme.dp8
@@ -61,6 +62,7 @@ fun DetailsScreen(
     onGetMovieInfo: () -> Unit,
     uiStateFlow: StateFlow<DetailsScreenUiState>,
     callBackPopBackDetail: () -> Unit,
+    onSaveMovieToCache: (DetailsDomainModel) -> Unit,
 ) {
     LaunchedEffect(key1 = true) {
         onGetMovieInfo()
@@ -70,7 +72,11 @@ fun DetailsScreen(
         DetailsScreenUiState.Loading -> LoadingScreen()
         is DetailsScreenUiState.Success -> {
             LoadedDetailsScreen(
-                model = detailsUiFlow, callBackPopBackDetail = callBackPopBackDetail
+                model = detailsUiFlow,
+                callBackPopBackDetail = callBackPopBackDetail,
+                onSaveMovieToCache = onSaveMovieToCache,
+                movieModel = detailsUiFlow.movieDetails,
+                isSaved = detailsUiFlow.isSaved
             )
         }
     }
@@ -81,13 +87,10 @@ fun LoadedDetailsScreen(
     modifier: Modifier = Modifier,
     model: DetailsScreenUiState.Success,
     callBackPopBackDetail: () -> Unit,
-    isSaved: Boolean = false
+    isSaved: Boolean,
+    onSaveMovieToCache: (DetailsDomainModel) -> Unit,
+    movieModel: DetailsDomainModel
 ) {
-    val detail = listOf(
-        model.movieDetails.overview,
-        model.movieDetails.title,
-    )
-
     val date = model.movieDetails.releaseDate
     val year = date.take(4).toIntOrNull()
     val verticalScrollState = rememberScrollState()
@@ -96,7 +99,6 @@ fun LoadedDetailsScreen(
         modifier = modifier
     ) {
         val screenHeight = maxHeight
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -122,24 +124,17 @@ fun LoadedDetailsScreen(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
-                IconButton(onClick = {}) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (isSaved) R.drawable.save_svgrepo_icons else R.drawable.un_saved_svgrepo_icons
-                        ),
-                        contentDescription = null,
-                    )
-                }
+                IsSavedMoviePainter(onSaveMovieToCache, movieModel, isSaved = isSaved)
             }
             Box {
                 Card(
-                    modifier = modifier,
+                    modifier = modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(bottomEnd = dp20, bottomStart = dp20)
                 ) {
                     AsyncImage(
                         modifier = modifier,
                         model = POSTER_PATH_URL + model.movieDetails.backdropPath,
-                        contentDescription = null,
+                        contentDescription = null
                     )
                 }
                 Row(
@@ -147,7 +142,6 @@ fun LoadedDetailsScreen(
                         .fillMaxWidth()
                         .padding(top = 160.dp, start = dp30)
                 ) {
-
                     Card(
                         modifier = modifier
                             .width(dp95)
@@ -168,11 +162,11 @@ fun LoadedDetailsScreen(
                         fontSize = sp18,
                         fontWeight = FontWeight.SemiBold,
                         lineHeight = 27.sp,
-
-                        )
+                    )
+                    Spacer(modifier = modifier.weight(1f))
                     Card(
                         modifier = modifier
-                            .padding(start = dp50, top = dp28)
+                            .padding(end = dp10, top = dp28)
                             .width(dp54)
                             .height(dp24),
                         shape = RoundedCornerShape(dp8),
@@ -249,14 +243,38 @@ fun LoadedDetailsScreen(
     }
 }
 
+@Composable
+private fun IsSavedMoviePainter(
+    onSaveMovieToCache: (DetailsDomainModel) -> Unit,
+    movieModel: DetailsDomainModel,
+    isSaved: Boolean
+) {
+    IconButton(onClick = {
+        onSaveMovieToCache(movieModel)
+    }) {
+        Icon(
+            painter = painterResource(
+                id = if (isSaved)
+                    R.drawable.save_svgrepo_icons
+                else R.drawable.un_saved_svgrepo_icons
+            ),
+            contentDescription = null,
+        )
+    }
+}
+
 
 @Preview
 @Composable
 fun LoadedDetailsScreenPreview() {
     MaterialTheme {
-        LoadedDetailsScreen(model = DetailsScreenUiState.Success(
-            movieDetails = DetailsUiModel.unknown
-        ), callBackPopBackDetail = {})
+//        LoadedDetailsScreen(model = DetailsScreenUiState.Success(
+//            movieDetails = DetailsUiModel.unknown
+//        ), callBackPopBackDetail = {},
+//            onSaveMovieToCache = {},
+//            movieModel = DetailsUiModel.unknown
+//        )
+//    }
     }
 }
    

@@ -5,7 +5,6 @@ import java.io.Serializable
 
 data class MovieDomain(
     val movieBackdropPath: String?,
-    val movieGenreIds: List<Int>,
     val movieId: Int,
     val movieOriginalLanguage: String,
     val movieOriginalTitle: String,
@@ -20,7 +19,6 @@ data class MovieDomain(
     companion object {
         val unknown = MovieDomain(
             movieBackdropPath = Constants.EMPTY_STRING,
-            movieGenreIds = listOf(0),
             movieOriginalLanguage = Constants.EMPTY_STRING,
             movieId = 0,
             movieOriginalTitle = Constants.EMPTY_STRING,

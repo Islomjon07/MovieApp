@@ -1,5 +1,7 @@
 package com.example.movieapp.di
 
+import com.example.movieapp.data.cache.MovieCacheDataSource
+import com.example.movieapp.data.cache.dao.MovieCacheModel
 import com.example.movieapp.data.cloud.remote.MovieService
 import com.example.movieapp.data.cloud.repository.DefaultGetCurrentMovieRepository
 import com.example.movieapp.domain.repository.GetCurrentMovieRepository
@@ -14,8 +16,10 @@ class RepositoryModule {
 
     @Provides
     fun provideGetCurrentWeatherRepository(
-        service: MovieService
+        service: MovieService,
+        movieCacheModel: MovieCacheDataSource
     ): GetCurrentMovieRepository = DefaultGetCurrentMovieRepository(
-        service = service
+        service = service,
+        movieCacheDataSource = movieCacheModel
     )
 }

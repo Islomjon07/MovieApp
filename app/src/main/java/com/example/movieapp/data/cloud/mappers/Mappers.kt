@@ -1,5 +1,6 @@
 package com.example.movieapp.data.cloud.mappers
 
+import com.example.movieapp.data.cache.dao.MovieCacheModel
 import com.example.movieapp.data.cloud.models.details.DetailsDataModel
 import com.example.movieapp.data.cloud.models.details.GenreDataModel
 import com.example.movieapp.data.cloud.models.details.ProductionCompanyDataModel
@@ -31,7 +32,6 @@ fun MovieResultList.toDataModel() = MovieDomain(
     movieId = movieId,
     movieOriginalTitle = movieOriginalTitle,
     movieOriginalLanguage = movieOriginalLanguage,
-    movieGenreIds = movieGenreIds,
     movieBackdropPath = movieBackdropPath,
 )
 
@@ -46,35 +46,22 @@ fun MovieDomain.toUiModel() = MovieUi(
     movieId = movieId,
     movieOriginalTitle = movieOriginalTitle,
     movieOriginalLanguage = movieOriginalLanguage,
-    movieGenreIds = movieGenreIds,
     movieBackdropPath = movieBackdropPath.orEmpty(),
 )
 
 //            DetailsDomain
 
 fun DetailsDataModel.toDataModel() = DetailsDomainModel(
-    adult = adult,
     backdropPath = POSTER_PATH_URL + backdropPath,
-    budget = budget,
-    genres = genres.map { it.toDataModel() },
-    homepage = homepage,
     id = id,
-    imdbId = imdbId,
     originalLanguage = originalLanguage,
     originalTitle = originalTitle,
     overview = overview,
     popularity = popularity,
     posterPath = posterPath,
-    productionCompanies = productionCompanies.map { it.toDataModel() },
-    productionCountries = productionCountries.map { it.toDataModel() },
     releaseDate = releaseDate,
-    revenue = revenue,
     runtime = runtime,
-    spokenLanguages = spokenLanguages.map { it.toDataModel() },
-    status = status,
-    tagline = tagline,
     title = title,
-    video = video,
     voteAverage = voteAverage,
     voteCount = voteCount,
 )
@@ -98,28 +85,16 @@ fun SpokenLanguageDataModel.toDataModel() = SpokenLanguageDomainModel(
 )
 
 fun DetailsDomainModel.toUiModel() = DetailsUiModel(
-    adult = adult,
     backdropPath = backdropPath.orEmpty(),
-    budget = budget,
-    genres = genres.map { it.toUiModel() },
-    homepage = homepage,
     id = id,
-    imdbId = imdbId,
     originalLanguage = originalLanguage,
     originalTitle = originalTitle,
     overview = overview,
     popularity = popularity,
     posterPath = posterPath.orEmpty(),
-    productionCompanies = productionCompanies.map { it.toUiModel() },
-    productionCountries = productionCountries.map { it.toUiModel() },
     releaseDate = releaseDate,
-    revenue = revenue,
     runtime = runtime,
-    spokenLanguages = spokenLanguages.map { it.toUiModel() },
-    status = status,
-    tagline = tagline,
     title = title,
-    video = video,
     voteAverage = voteAverage,
     voteCount = voteCount,
 )
@@ -140,6 +115,12 @@ fun ProductionCompanyDomainModel.toUiModel() = ProductionCompanyUiModel(
 fun SpokenLanguageDomainModel.toUiModel() = SpokenLanguageUiModel(
     name = name, iso6391 = iso6391, englishName = englishName
 )
+
+
+
+
+
+
 
 
 

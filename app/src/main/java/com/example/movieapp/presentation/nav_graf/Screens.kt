@@ -5,7 +5,6 @@ import com.example.movieapp.R
 sealed class Screens(val route: String) {
     data object BottomNavigation : Screens("BottomNavigation")
 }
-
 sealed class BottomScreens(val title: String, val iconId: Int, val route: String) {
     data object MainScreen : BottomScreens(
         "Home", R.drawable.home, "MainScreen"

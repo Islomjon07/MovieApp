@@ -9,17 +9,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.movieapp.presentation.component.BottomNavGraphUI
-import com.example.movieapp.presentation.screens.datails_screen.component.DetailsDestination
 import com.example.movieapp.presentation.screens.datails_screen.DetailsScreen
 import com.example.movieapp.presentation.screens.datails_screen.DetailsViewModel
+import com.example.movieapp.presentation.screens.datails_screen.component.DetailsDestination
 import com.example.movieapp.presentation.screens.main_screen.MainScreen
 import com.example.movieapp.presentation.screens.main_screen.MainScreenViewModel
 import com.example.movieapp.presentation.screens.main_screen.component.MainScreenDestination
-import com.example.movieapp.presentation.screens.seach_screen.component.SearchDestination
 import com.example.movieapp.presentation.screens.seach_screen.SearchScreen
 import com.example.movieapp.presentation.screens.seach_screen.SearchViewModel
-import com.example.movieapp.presentation.screens.watch_list_screen.component.WatchListDestination
+import com.example.movieapp.presentation.screens.seach_screen.component.SearchDestination
 import com.example.movieapp.presentation.screens.watch_list_screen.WatchListScreen
+import com.example.movieapp.presentation.screens.watch_list_screen.WatchListScreenViewModel
+import com.example.movieapp.presentation.screens.watch_list_screen.component.WatchListDestination
 
 @Composable
 fun BottomNavGraph(
@@ -55,7 +56,14 @@ fun BottomNavGraph(
             )
         }
         composable(WatchListDestination.route) {
-            WatchListScreen()
+            val viewModel: WatchListScreenViewModel = hiltViewModel()
+            WatchListScreen(
+                uiStateFlow = viewModel.uiState,
+                navigateToDetails = { watchList ->
+                    navHostController.navigate("${DetailsDestination.route}/$watchList")
+                },
+                callBackPopBackStake = { navHostController.navigate(MainScreenDestination.route) }
+            )
         }
         composable(
             route = DetailsDestination.routeWithArgs,
@@ -66,7 +74,8 @@ fun BottomNavGraph(
             DetailsScreen(
                 onGetMovieInfo = { viewModel.getDetailsMovie(movieId) },
                 uiStateFlow = viewModel.uiState,
-                callBackPopBackDetail = { navHostController.popBackStack() }
+                callBackPopBackDetail = { navHostController.popBackStack() },
+                onSaveMovieToCache = viewModel::saveMovieToCache,
             )
         }
     }

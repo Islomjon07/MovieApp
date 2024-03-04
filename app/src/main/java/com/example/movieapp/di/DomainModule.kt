@@ -3,6 +3,14 @@ package com.example.movieapp.di
 import com.example.movieapp.domain.repository.GetCurrentMovieRepository
 import com.example.movieapp.domain.use_cases.details.DefaultDetailsMovieUseCase
 import com.example.movieapp.domain.use_cases.details.DetailsMovieUseCase
+import com.example.movieapp.domain.use_cases.local.delete.DeleteMovieById
+import com.example.movieapp.domain.use_cases.local.delete.DeleteMovieByIdImpl
+import com.example.movieapp.domain.use_cases.local.observe.FetchAllSaveUseCase
+import com.example.movieapp.domain.use_cases.local.observe.FetchAllSaveUseCaseImpl
+import com.example.movieapp.domain.use_cases.local.observe.ObserveIsMovieSavedById
+import com.example.movieapp.domain.use_cases.local.observe.ObserveIsMovieSavedByIdImpl
+import com.example.movieapp.domain.use_cases.local.save.SaveMovieToCacheUseCase
+import com.example.movieapp.domain.use_cases.local.save.SaveMovieToCacheUseCaseImpl
 import com.example.movieapp.domain.use_cases.now_playing.DefaultNowPlayingMovieUseCase
 import com.example.movieapp.domain.use_cases.now_playing.GetNowPlayingMovieUseCase
 import com.example.movieapp.domain.use_cases.popular.DefaultGetPopularMovieUseCase
@@ -63,5 +71,34 @@ class DomainModule {
     ): SearchMovieUseCase = DefaultSearchMovieUseCase(
         repository = repository
     )
+
+    @Provides
+    fun provideSaveToMovieUseCase(
+        repository: GetCurrentMovieRepository
+    ): SaveMovieToCacheUseCase = SaveMovieToCacheUseCaseImpl(
+        movieRepository = repository
+    )
+
+    @Provides
+    fun provideFetchSaveToMovieUseCase(
+        repository: GetCurrentMovieRepository
+    ): FetchAllSaveUseCase = FetchAllSaveUseCaseImpl(
+        movieRepository = repository
+    )
+
+    @Provides
+    fun provideObserveIsMovieSavedByIdUseCase(
+        repository: GetCurrentMovieRepository
+    ): ObserveIsMovieSavedById = ObserveIsMovieSavedByIdImpl(
+        repository = repository
+    )
+
+    @Provides
+    fun provideDeleteMovieByIdUseCase(
+        repository: GetCurrentMovieRepository
+    ): DeleteMovieById = DeleteMovieByIdImpl(
+        repository = repository
+    )
+
 }
 

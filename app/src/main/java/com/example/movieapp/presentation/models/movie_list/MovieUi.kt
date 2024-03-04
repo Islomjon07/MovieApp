@@ -7,7 +7,6 @@ import java.io.Serializable
 @Stable
 data class MovieUi(
     val movieBackdropPath: String,
-    val movieGenreIds: List<Int>,
     val movieId: Int,
     val movieOriginalLanguage: String,
     val movieOriginalTitle: String,
@@ -22,7 +21,6 @@ data class MovieUi(
     companion object {
         val unknown = MovieUi(
             movieBackdropPath = EMPTY_STRING,
-            movieGenreIds = listOf(0),
             movieOriginalLanguage = EMPTY_STRING,
             movieId = 0,
             movieOriginalTitle = EMPTY_STRING,
